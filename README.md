@@ -24,7 +24,7 @@
 - [x] review TODO in the code
 - [ ] detect user's decimal separator with `Intl.NumberFormat`
 - [ ] allow configuration of decimal number precision
-- [x] unify notation of opertions 
+- [ ] unify notation of opertions 
 - [x] list browsers supported, page info
 
 ## Ideas
