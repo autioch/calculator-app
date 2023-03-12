@@ -20,15 +20,14 @@
 - [x] cursor at any place
 - [ ] replace eval - implement proper tokenizer and RPN - this way brackets and other operations can be supported.
 - [x] better error handling - in one place and for user
-- [ ] layout improvements
+- [x] layout improvements
 - [x] review TODO in the code
 - [ ] detect user's decimal separator with `Intl.NumberFormat`
 - [ ] allow configuration of decimal number precision
 - [x] unify notation of opertions 
+- [x] list browsers supported, page info
 
 ## Ideas
-- page info
-- list browsers supported
 - what about bigint
 - dark mode
 - calculation history

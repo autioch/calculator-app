@@ -124,7 +124,7 @@ const calculateTestCases = [
         description: 'Exponent negative base',
         input: '-2^3',
         result: NaN,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
     },
     {
         description: 'Exponent negative power',
@@ -136,7 +136,7 @@ const calculateTestCases = [
         description: 'Exponent both negative',
         input: '-2^-3',
         result: NaN,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
     },
     {
         description: 'Exponent decimals',
@@ -148,7 +148,7 @@ const calculateTestCases = [
         description: 'Exponent negative decimals',
         input: '-2.5^-3.5',
         result: NaN,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
     },
     // operator precedence
     {
@@ -205,13 +205,13 @@ const calculateTestCases = [
         description: 'Letters',
         input: 'a',
         result: NaN,
-        errorMessage: 'Invalid characters in expression'
+        errorMessage: 'Remove invalid characters'
     },
     {
         description: 'XSS',
         input: `alert('oopsie')`,
         result: NaN,
-        errorMessage: 'Invalid characters in expression'
+        errorMessage: 'Remove invalid characters'
     },
     {
         description: 'Incomplete',
