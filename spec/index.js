@@ -14,16 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let output;
 
         try {
-            output = calculate(input);
+            output = calculator.run(input);
         } catch (err) {
             output = {
                 result: NaN,
-                errorMessage: err.errorMessage
+                message: err.message
             }
         }
 
         console.assert(Object.is(result, output.result), 'Expected result %o to equal %o', result, output.result);
-        console.assert(Object.is(errorMessage, output.errorMessage), 'Expected errorMessage %o to equal %o', errorMessage, output.errorMessage);
+        console.assert(Object.is(errorMessage, output.message), 'Expected message %o to equal %o', errorMessage, output.message);
 
 
     });
@@ -89,8 +89,14 @@ const calculateTestCases = [
     {
         description: 'Division by zero',
         input: '5 / 0',
-        result: Infinity,
-        errorMessage: '',// 'Invalid operation - division by zero'
+        result: undefined,
+        errorMessage: 'Sorry, failed to calculate'
+    },
+    {
+        description: 'Division by zero in complex expression',
+        input: '2 * 2 / 0 ** 2',
+        result: undefined,
+        errorMessage: 'Sorry, failed to calculate'
     },
     {
         description: 'Multiply by zero',
@@ -117,14 +123,14 @@ const calculateTestCases = [
         *
         1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
         `,
-        result: Infinity,
-        errorMessage: '',
+        result: undefined,
+        errorMessage: 'Sorry, failed to calculate'
     },
     {
         description: 'Exponent negative base',
         input: '-2^3',
-        result: NaN,
-        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
+        result: undefined,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     {
         description: 'Exponent negative power',
@@ -135,8 +141,8 @@ const calculateTestCases = [
     {
         description: 'Exponent both negative',
         input: '-2^-3',
-        result: NaN,
-        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
+        result: undefined,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     {
         description: 'Exponent decimals',
@@ -147,8 +153,8 @@ const calculateTestCases = [
     {
         description: 'Exponent negative decimals',
         input: '-2.5^-3.5',
-        result: NaN,
-        errorMessage: 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence',
+        result: undefined,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     // operator precedence
     {
@@ -204,19 +210,19 @@ const calculateTestCases = [
     {
         description: 'Letters',
         input: 'a',
-        result: NaN,
+        result: undefined,
         errorMessage: 'Remove invalid characters'
     },
     {
         description: 'XSS',
         input: `alert('oopsie')`,
-        result: NaN,
+        result: undefined,
         errorMessage: 'Remove invalid characters'
     },
     {
         description: 'Incomplete',
         input: '2 + ',
-        result: NaN,
-        errorMessage: 'Unexpected end of input'
+        result: undefined,
+        errorMessage: 'Incomplete expression'
     },
 ]
