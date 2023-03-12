@@ -132,6 +132,10 @@ body {
         width: 96vw;
     }
 
+    .c-input {
+        width: 100%;
+    }
+
     .c-output {
         height: 12vh;
     }
