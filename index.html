@@ -7,42 +7,42 @@
 </head>
 
 <body>
-    <h1>Calculator</h1>
-    <script src="calculator.js"></script>
-    <script src="index.js"></script>
-
     <main class="c-app">
+        <div class="c-header">Calculator</div>
         <div class="c-output">Please enter valid expression</div>
-        <input class="c-input" type="text" placeholder="Type in expression..." oninput="app.tryCalculate()">
+        <input class="c-input" type="text" placeholder="Type in expression..." autofocus oninput="app.tryCalculate()">
         <div class="c-keyboard">
             <!-- Hack order to easily place in grid-->
-            <button onclick="app.remove()">&larr;</button>
-            <button onclick="app.empty()">X</button>
+            <button class="c-button c-remove" onclick="app.remove()">&larr;</button>
+            <button class="c-button c-remove" onclick="app.empty()">X</button>
             <div></div>
-            <button onclick="app.insert('^')">^</button>
+            <button class="c-button c-operation" onclick="app.insert('^')">^</button>
 
-            <button onclick="app.insert('7')">7</button>
-            <button onclick="app.insert('8')">8</button>
-            <button onclick="app.insert('9')">9</button>
-            <button onclick="app.insert('/')">/</button>
+            <button class="c-button c-number" onclick="app.insert('7')">7</button>
+            <button class="c-button c-number" onclick="app.insert('8')">8</button>
+            <button class="c-button c-number" onclick="app.insert('9')">9</button>
+            <button class="c-button c-operation" onclick="app.insert('/')">/</button>
 
-            <button onclick="app.insert('4')">4</button>
-            <button onclick="app.insert('5')">5</button>
-            <button onclick="app.insert('6')">6</button>
-            <button onclick="app.insert('*')">*</button>
-            
-            <button onclick="app.insert('1')">1</button>
-            <button onclick="app.insert('2')">2</button>
-            <button onclick="app.insert('3')">3</button>
-            <button onclick="app.insert('-')">-</button>
-            
-            <button onclick="app.insert('0')">0</button>
-            <button onclick="app.insert(',')">,</button>
+            <button class="c-button c-number" onclick="app.insert('4')">4</button>
+            <button class="c-button c-number" onclick="app.insert('5')">5</button>
+            <button class="c-button c-number" onclick="app.insert('6')">6</button>
+            <button class="c-button c-operation" onclick="app.insert('*')">*</button>
+
+            <button class="c-button c-number" onclick="app.insert('1')">1</button>
+            <button class="c-button c-number" onclick="app.insert('2')">2</button>
+            <button class="c-button c-number" onclick="app.insert('3')">3</button>
+            <button class="c-button c-operation" onclick="app.insert('-')">-</button>
+
+            <button class="c-button c-number" onclick="app.insert('0')">0</button>
+            <button class="c-button c-number" onclick="app.insert(',')">,</button>
             <div></div>
-            <button onclick="app.insert('+')">+</button>
-            
+            <button class="c-button c-operation" onclick="app.insert('+')">+</button>
+
         </div>
     </main>
+
+    <script src="calculator.js"></script>
+    <script src="index.js"></script>
 </body>
 
 </html>

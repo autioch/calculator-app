@@ -1,6 +1,6 @@
 html,
 body {
-    margin:0;
+    margin: 0;
     padding: 0;
     border: 0;
     width: 100%;
@@ -13,11 +13,58 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+:root {
+    --btn-opacity: 0.5;
+}
 
+.c-app {}
+
+.c-header {
+    text-align: center;
+}
+
+.c-output {
+    text-align: right;
+}
+
+.c-input {
+    text-align: right;
+    box-sizing: border-box;
+    outline: 0;
+    font-size: inherit;
+    margin:0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+}
 
 .c-keyboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    /* gap: 1vh 1vh; */
+}
+
+
+.c-button {
+    border: 0;
+    font-size: inherit;
+}
+
+.c-button:active {
+    --btn-opacity: 1;
+}
+
+.c-remove {
+    background-color: rgba(255, 200, 200, var(--btn-opacity));
+}
+
+.c-number {
+    background-color: rgba(200, 200, 200, var(--btn-opacity));
+}
+
+.c-operation {
+    background-color: rgba(200, 220, 255, var(--btn-opacity));
 }
