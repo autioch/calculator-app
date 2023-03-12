@@ -27,7 +27,7 @@
         if (!validationRegexp.test(normalizedText)) {
             return {
                 result: NaN,
-                errorMessage: 'Invalid characters in expression'
+                errorMessage: 'Remove invalid characters'
             }
         }
         try {

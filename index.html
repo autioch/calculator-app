@@ -13,35 +13,43 @@
 
 <body>
     <main class="c-app">
-        <div class="c-header">Calculator</div>
-        <div class="c-output">Please enter valid expression</div>
-        <input class="c-input" type="text" placeholder="Example: 1 + 2 * 3 ^ 4 / 5 - 6" autofocus oninput="app.tryCalculate()">
+        <div class="c-top">
+            <div class="c-header">
+                <img class="c-icon" src="favicon.png" alt="Application icon" />
+                <div class="c-title">Calculator</div>
+            </div>
+
+            <div class="c-output">Please enter valid expression</div>
+
+            <input class="c-input" type="text" placeholder="Example: 1 + 2 * 3 ^ 4 / 5 - 6"
+                oninput="app.tryCalculate()">
+        </div>
         <div class="c-keyboard">
             <!-- Hack order to easily place in grid-->
-            <button class="c-button c-remove" onclick="app.remove()">&larr;</button>
-            <button class="c-button c-remove" onclick="app.empty()">X</button>
+            <button class="c-button c-remove" title="Reset expression" onclick="app.empty()">X</button>
+            <button class="c-button c-remove" title="Remove character" onclick="app.remove()">&larr;</button>
             <div></div>
-            <button class="c-button c-operation" onclick="app.insert('^')">^</button>
+            <button class="c-button c-operation" title="Exponentiate" onclick="app.insert('^')">^</button>
 
-            <button class="c-button c-number" onclick="app.insert('7')">7</button>
-            <button class="c-button c-number" onclick="app.insert('8')">8</button>
-            <button class="c-button c-number" onclick="app.insert('9')">9</button>
-            <button class="c-button c-operation" onclick="app.insert('/')">/</button>
+            <button class="c-button c-number" title="Insert 7" onclick="app.insert('7')">7</button>
+            <button class="c-button c-number" title="Insert 8" onclick="app.insert('8')">8</button>
+            <button class="c-button c-number" title="Insert 9" onclick="app.insert('9')">9</button>
+            <button class="c-button c-operation" title="Divide" onclick="app.insert('/')">/</button>
 
-            <button class="c-button c-number" onclick="app.insert('4')">4</button>
-            <button class="c-button c-number" onclick="app.insert('5')">5</button>
-            <button class="c-button c-number" onclick="app.insert('6')">6</button>
-            <button class="c-button c-operation" onclick="app.insert('*')">*</button>
+            <button class="c-button c-number" title="Insert 4" onclick="app.insert('4')">4</button>
+            <button class="c-button c-number" title="Insert 5" onclick="app.insert('5')">5</button>
+            <button class="c-button c-number" title="Insert 6" onclick="app.insert('6')">6</button>
+            <button class="c-button c-operation" title="Multiply" onclick="app.insert('*')">*</button>
 
-            <button class="c-button c-number" onclick="app.insert('1')">1</button>
-            <button class="c-button c-number" onclick="app.insert('2')">2</button>
-            <button class="c-button c-number" onclick="app.insert('3')">3</button>
-            <button class="c-button c-operation" onclick="app.insert('-')">-</button>
+            <button class="c-button c-number" title="Insert 1" onclick="app.insert('1')">1</button>
+            <button class="c-button c-number" title="Insert 2" onclick="app.insert('2')">2</button>
+            <button class="c-button c-number" title="Insert 3" onclick="app.insert('3')">3</button>
+            <button class="c-button c-operation" title="Substract" onclick="app.insert('-')">-</button>
 
-            <button class="c-button c-number" onclick="app.insert('0')">0</button>
-            <button class="c-button c-number" onclick="app.insert(',')">,</button>
+            <button class="c-button c-number" title="0" onclick="app.insert('0')">0</button>
+            <button class="c-button c-number" title="Decimal" onclick="app.insert(',')">,</button>
             <div></div>
-            <button class="c-button c-operation" onclick="app.insert('+')">+</button>
+            <button class="c-button c-operation" title="Add" onclick="app.insert('+')">+</button>
 
         </div>
     </main>

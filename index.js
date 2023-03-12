@@ -4,14 +4,23 @@ document.addEventListener('DOMContentLoaded', function setup() {
         output: document.querySelector('.c-output'),
     }
 
+    // Simple check for pointer devices. When on mobile, try to not show the virtual keyboard.
+    const isMobile = window.matchMedia("only screen and (hover: none) and (pointer: coarse)").matches;
+
     // Make sure that even if input isn't focused, any keyboard action lands in it
     // This causes issues with copying text, but it shouldn't be required.
-    document.addEventListener('keydown', function checkInputFocus() {
-        if (document.activeElement !== ui.input) {
-            ui.input.focus();
-        }
-    })
+    if (!isMobile){
+        document.addEventListener('keydown', function checkInputFocus() {
+            if (document.activeElement !== ui.input) {
+                ui.input.focus();
+            }
+        });
 
+        ui.input.focus();
+    }
+
+
+    // Expose only public API
     globalThis.app = {
         insert: decorateInputOperation(insert),
         empty: decorateInputOperation(empty),
@@ -35,40 +44,58 @@ document.addEventListener('DOMContentLoaded', function setup() {
         ui.input.setSelectionRange(cursor - 1, cursor - 1);
     }
 
+    // Wraps specific operations into common steps
     function decorateInputOperation(callbackFn) {
         return function decorator(...args) {
             const { selectionStart: cursor, value } = ui.input;
 
             callbackFn(cursor, value, ...args);
             tryCalculate();
-            ui.input.focus();
+            !isMobile && ui.input.focus();
         }
     }
 
     function tryCalculate() {
-        const { value } = ui.input;
+        const { hasError, hasResult, message } = handleCalculation(ui.input.value);
 
+        ui.output.textContent = message;
+        ui.output.title = message;
+        ui.output.classList.toggle('has-error', hasError);
+        ui.output.classList.toggle('has-result', hasResult);
+    }
+
+    function handleCalculation(value) {
         if (!value.length) {
-            ui.output.textContent = 'Start typing expression...';
-
-            return;
+            return {
+                hasError: false,
+                hasResult: false,
+                message: 'Enter expression to calculate'
+            };
         }
 
         const { result, errorMessage } = calculate(value);
 
-        ui.output.textContent = formatMessage(result, errorMessage);
-    }
-
-    function formatMessage(result, errorMessage) {
         if (errorMessage.length) {
-            return errorMessage;
+            return {
+                hasError: true,
+                hasResult: false,
+                message: errorMessage
+            };
         }
 
         if (Object.is(result, NaN)) {
-            return 'Unexpected error';
+            return {
+                hasError: true,
+                hasResult: false,
+                message: 'Unexpected error'
+            };
         }
 
-        return `Result is: ${result}`;
+        return {
+            hasError: false,
+            hasResult: true,
+            message: `Result: ${result}`
+        };
     }
 
 });
