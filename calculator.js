@@ -1,4 +1,9 @@
-/* Calculation engine. */
+/* Calculation engine.
+ * Uses eval as a hack for a quick solution.
+ * Proper implementation would mean edge cases handled properly.
+ * It would require some tokenizer, then calculating averything according to the precedence.
+ * If brackets were to be added, more sofisticated solution would be advised.
+ */
 
 /* Since modules don't work when loading file locally, use old JS.
  * Wrap everything and expose only public api to not pollute the globals */
