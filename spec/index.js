@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.group('calculate');
 
-    const onlyTests = calculateTestCases.some(testCase => testCase.only) ? calculateTestCases.filter(testCase => testCase.only): calculateTestCases;
+    const onlyTests = calculateTestCases.some(testCase => testCase.only) ? calculateTestCases.filter(testCase => testCase.only) : calculateTestCases;
     const testsToRun = onlyTests.filter(testCase => !testCase.skip);
 
     testsToRun.forEach((testCase, index) => {
@@ -123,9 +123,8 @@ const calculateTestCases = [
     {
         description: 'Exponent negative base',
         input: '-2^3',
-        result: -8,
-        errorMessage: '',
-        skip // 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence'
+        result: NaN,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     {
         description: 'Exponent negative power',
@@ -136,9 +135,8 @@ const calculateTestCases = [
     {
         description: 'Exponent both negative',
         input: '-2^-3',
-        result: -8,
-        errorMessage: '',
-        skip // 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence'
+        result: NaN,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     {
         description: 'Exponent decimals',
@@ -149,9 +147,8 @@ const calculateTestCases = [
     {
         description: 'Exponent negative decimals',
         input: '-2.5^-3.5',
-        result: -8,
-        errorMessage: '',
-        skip // 'Unary operator used immediately before exponentiation expression. Parenthesis must be used to disambiguate operator precedence'
+        result: NaN,
+        errorMessage: 'Exponentiation of negative base is not supported',
     },
     // operator precedence
     {
@@ -208,13 +205,13 @@ const calculateTestCases = [
         description: 'Letters',
         input: 'a',
         result: NaN,
-        errorMessage: 'Invalid expression'
+        errorMessage: 'Invalid characters in expression'
     },
     {
         description: 'XSS',
         input: `alert('oopsie')`,
         result: NaN,
-        errorMessage: 'Invalid expression'
+        errorMessage: 'Invalid characters in expression'
     },
     {
         description: 'Incomplete',

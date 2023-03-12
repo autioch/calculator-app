@@ -4,12 +4,22 @@ document.addEventListener('DOMContentLoaded', function setup() {
         output: document.querySelector('.c-output'),
     }
 
+    // Make sure that even if input isn't focused, any keyboard action lands in it
+    // This causes issues with copying text, but it shouldn't be required.
+    document.addEventListener('keydown', function checkInputFocus() {
+        if (document.activeElement !== ui.input) {
+            ui.input.focus();
+        }
+    })
+
     globalThis.app = {
         insert: decorateInputOperation(insert),
         empty: decorateInputOperation(empty),
         remove: decorateInputOperation(remove),
         tryCalculate
     }
+
+    tryCalculate();
 
     function insert(cursor, value, text) {
         ui.input.value = value.slice(0, cursor) + text + value.slice(cursor);
@@ -27,8 +37,7 @@ document.addEventListener('DOMContentLoaded', function setup() {
 
     function decorateInputOperation(callbackFn) {
         return function decorator(...args) {
-            const cursor = ui.input.selectionStart;
-            const value = ui.input.value;
+            const { selectionStart: cursor, value } = ui.input;
 
             callbackFn(cursor, value, ...args);
             tryCalculate();
@@ -37,10 +46,29 @@ document.addEventListener('DOMContentLoaded', function setup() {
     }
 
     function tryCalculate() {
-        const { result } = calculate(ui.input.value);
-        const message = Object.is(result, NaN) ? 'Please enter valid expression' : `Result is: ${result}`;
+        const { value } = ui.input;
 
-        ui.output.textContent = message;
+        if (!value.length) {
+            ui.output.textContent = 'Start typing expression...';
+
+            return;
+        }
+
+        const { result, errorMessage } = calculate(value);
+
+        ui.output.textContent = formatMessage(result, errorMessage);
+    }
+
+    function formatMessage(result, errorMessage) {
+        if (errorMessage.length) {
+            return errorMessage;
+        }
+
+        if (Object.is(result, NaN)) {
+            return 'Unexpected error';
+        }
+
+        return `Result is: ${result}`;
     }
 
 });

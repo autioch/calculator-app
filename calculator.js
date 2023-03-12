@@ -27,7 +27,7 @@
         if (!validationRegexp.test(normalizedText)) {
             return {
                 result: NaN,
-                errorMessage: 'Invalid expression'
+                errorMessage: 'Invalid characters in expression'
             }
         }
         try {
@@ -45,6 +45,13 @@
                 errorMessage: ''
             }
         } catch (err) {
+            // Known issue. Unary requires negative numbers to be enclosed in brackets.
+            if (err.message.startsWith('Unary operator')) {
+                return {
+                    result: NaN,
+                    errorMessage: 'Exponentiation of negative base is not supported'
+                }
+            }
             return {
                 result: NaN,
                 errorMessage: err.message
