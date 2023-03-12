@@ -12,7 +12,6 @@
     function normalizeText(text) {
         return text
             // people can paste in numbers formatter differently.
-            // TODO Detect decimal and thousand separator from the user settings.
             .replace(/,/g, '.')
 
             // For eval, ^ would be bitwise XOR. Make sure we handle user habits.
@@ -32,12 +31,9 @@
         }
         try {
             // Potentially very dangerous, but validationRegexp should help.
-            // TODO Implement proper tokenization, RPN.
-            // This way brackets and other operations can be supported.
             const result = eval(normalizedText);
 
             // Round to 5 decimals. Hides precision errors.
-            // TODO This could be a configuration option
             const rounded = Math.round(result * decimalFactor) / decimalFactor;
 
             return {

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function setup() {
 
     // Make sure that even if input isn't focused, any keyboard action lands in it
     // This causes issues with copying text, but it shouldn't be required.
-    if (!isMobile){
+    if (!isMobile) {
         document.addEventListener('keydown', function checkInputFocus() {
             if (document.activeElement !== ui.input) {
                 ui.input.focus();
@@ -30,26 +30,27 @@ document.addEventListener('DOMContentLoaded', function setup() {
 
     tryCalculate();
 
-    function insert(cursor, value, text) {
-        ui.input.value = value.slice(0, cursor) + text + value.slice(cursor);
-        ui.input.setSelectionRange(cursor + 1, cursor + 1);
+    function insert(selectionStart, selectionEnd, value, text) {
+        ui.input.setRangeText(text);
+        ui.input.setSelectionRange(selectionStart + text.length, selectionStart + text.length);
     }
 
     function empty() {
         ui.input.value = '';
     }
 
-    function remove(cursor, value) {
-        ui.input.value = value.slice(0, cursor - 1) + value.slice(cursor);
-        ui.input.setSelectionRange(cursor - 1, cursor - 1);
+    function remove(selectionStart, selectionEnd, value) {
+        const sliceFrom = selectionStart - ((selectionStart === selectionEnd) ? Number(selectionStart !== 0) : 0);
+
+        ui.input.value = value.slice(0, sliceFrom) + value.slice(selectionEnd);
+        ui.input.setSelectionRange(sliceFrom, sliceFrom);
     }
 
     // Wraps specific operations into common steps
     function decorateInputOperation(callbackFn) {
         return function decorator(...args) {
-            const { selectionStart: cursor, value } = ui.input;
-
-            callbackFn(cursor, value, ...args);
+            const { selectionStart, selectionEnd, value } = ui.input;
+            callbackFn(selectionStart, selectionEnd, value, ...args);
             tryCalculate();
             !isMobile && ui.input.focus();
         }

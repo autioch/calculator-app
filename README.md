@@ -18,11 +18,12 @@
 - [x] rounding
 - [x] clearing/deleting
 - [x] cursor at any place
-- [ ] replace eval
+- [ ] replace eval - implement proper tokenizer and RPN - this way brackets and other operations can be supported.
 - [ ] better error handling - in one place and for user
 - [ ] layout improvements
-- [ ] review TODO in the code
-
+- [x] review TODO in the code
+- [ ] detect user's decimal separator with `Intl.NumberFormat`
+- [ ] allow configuration of decimal number precision
 
 ## Ideas
 - page info
