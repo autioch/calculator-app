@@ -12,18 +12,10 @@
 </head>
 
 <body>
-    <main class="c-app">
-        <div class="c-top">
-            <div class="c-header">
-                <img class="c-icon" src="favicon.png" alt="Application icon" />
-                <div class="c-title">Calculator</div>
-            </div>
-
-            <div class="c-output">Please enter valid expression</div>
-
-            <input class="c-input" type="text" placeholder="Example: 1 + 2 &times; 3 ^ 4 &divide; 5 - 6"
-                oninput="app.tryCalculate()">
-        </div>
+    <div class="c-app">
+        <div class="c-header">Calculator</div>
+        <input class="c-input" type="text" placeholder="1 + 2 * 3 ^ 4 / 5 - 6" oninput="app.tryCalculate()">
+        <div class="c-output">Please enter valid expression</div>
         <div class="c-keyboard">
             <!-- Hack order to easily place in grid-->
             <button class="c-button c-remove" title="Reset expression" onclick="app.empty()">C</button>
@@ -50,10 +42,10 @@
             <button class="c-button c-number" title="Decimal" onclick="app.insert(',')">,</button>
             <!-- Calculation is live, something that users might not be used to. Might have to enable this. -->
             <!-- <button class="c-button c-calculate" title="Calculate" onclick="app.tryCalculate()">=</button> -->
+            <div></div>
             <button class="c-button c-operation" title="Add" onclick="app.insert('+')">+</button>
         </div>
-    </main>
-
+    </div>
     <script src="calculator.js"></script>
     <script src="index.js"></script>
 </body>
