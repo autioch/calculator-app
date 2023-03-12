@@ -15,7 +15,7 @@
             .replace(/,/g, '.')
 
             // For eval, ^ would be bitwise XOR. Make sure we handle user habits.
-            .replace(/\^/g, '**');
+            .replace(/\^/g, '**')
     }
 
     function calculate(text) {
@@ -27,7 +27,7 @@
             return {
                 result: NaN,
                 errorMessage: 'Remove invalid characters'
-            }
+            };
         }
         try {
             // Potentially very dangerous, but validationRegexp should help.
@@ -39,19 +39,12 @@
             return {
                 result: rounded,
                 errorMessage: ''
-            }
+            };
         } catch (err) {
-            // Known issue. Unary requires negative numbers to be enclosed in brackets.
-            if (err.message.startsWith('Unary operator')) {
-                return {
-                    result: NaN,
-                    errorMessage: 'Exponentiation of negative base is not supported'
-                }
-            }
             return {
                 result: NaN,
                 errorMessage: err.message
-            }
+            };
         }
     }
 })()

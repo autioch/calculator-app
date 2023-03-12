@@ -137,6 +137,10 @@ body {
     background-color: rgba(200, 220, 255, var(--btn-opacity));
 }
 
+.c-calculate {
+    background-color: rgba(200, 255, 200, var(--btn-opacity));
+}
+
 @media screen and (hover: none) and (pointer: coarse) and (orientation: landscape) {
     .c-app {
         display: flex;

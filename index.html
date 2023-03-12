@@ -21,7 +21,7 @@
 
             <div class="c-output">Please enter valid expression</div>
 
-            <input class="c-input" type="text" placeholder="Example: 1 + 2 * 3 ^ 4 / 5 - 6"
+            <input class="c-input" type="text" placeholder="Example: 1 + 2 &times; 3 ^ 4 &divide; 5 - 6"
                 oninput="app.tryCalculate()">
         </div>
         <div class="c-keyboard">
@@ -34,23 +34,23 @@
             <button class="c-button c-number" title="Insert 7" onclick="app.insert('7')">7</button>
             <button class="c-button c-number" title="Insert 8" onclick="app.insert('8')">8</button>
             <button class="c-button c-number" title="Insert 9" onclick="app.insert('9')">9</button>
-            <button class="c-button c-operation" title="Divide" onclick="app.insert('/')">/</button>
+            <button class="c-button c-operation" title="Divide" onclick="app.insert('/')">&divide;</button>
 
             <button class="c-button c-number" title="Insert 4" onclick="app.insert('4')">4</button>
             <button class="c-button c-number" title="Insert 5" onclick="app.insert('5')">5</button>
             <button class="c-button c-number" title="Insert 6" onclick="app.insert('6')">6</button>
-            <button class="c-button c-operation" title="Multiply" onclick="app.insert('*')">*</button>
+            <button class="c-button c-operation" title="Multiply" onclick="app.insert('*')">&times;</button>
 
             <button class="c-button c-number" title="Insert 1" onclick="app.insert('1')">1</button>
             <button class="c-button c-number" title="Insert 2" onclick="app.insert('2')">2</button>
             <button class="c-button c-number" title="Insert 3" onclick="app.insert('3')">3</button>
-            <button class="c-button c-operation" title="Substract" onclick="app.insert('-')">-</button>
+            <button class="c-button c-operation" title="Substract" onclick="app.insert('-')">&minus;</button>
 
             <button class="c-button c-number" title="0" onclick="app.insert('0')">0</button>
             <button class="c-button c-number" title="Decimal" onclick="app.insert(',')">,</button>
-            <div></div>
+            <!-- Calculation is live, something that users might not be used to. Might have to enable this. -->
+            <!-- <button class="c-button c-calculate" title="Calculate" onclick="app.tryCalculate()">=</button> -->
             <button class="c-button c-operation" title="Add" onclick="app.insert('+')">+</button>
-
         </div>
     </main>
 
