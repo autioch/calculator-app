@@ -11,15 +11,18 @@
 3. Run tests - see `spec/index.html` file.
 
 ## To do
-- MVP - inserting numbers, operators
-- tests
-- lighthouse
-- decimals
-- rounding
-- clearing/deleting
-- cursor at any place
-- replace eval
-- better error handling
+- [x] MVP - inserting numbers, operators
+- [x] tests
+- [x] lighthouse
+- [x] decimals
+- [x] rounding
+- [x] clearing/deleting
+- [x] cursor at any place
+- [ ] replace eval
+- [ ] better error handling - in one place and for user
+- [ ] layout improvements
+- [ ] review TODO in the code
+
 
 ## Ideas
 - page info
