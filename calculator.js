@@ -49,8 +49,12 @@
             const result = eval(normalizedText);
 
             // No error, but somehow we got weird value
-            if (Object.is(result, NaN) || Object.is(result, Infinity) || Object.is(result, -Infinity)) {
+            if (Object.is(result, NaN)) {
                 return makeResult(undefined, 'Sorry, failed to calculate', true);
+            }
+
+            if (Object.is(result, Infinity) || Object.is(result, -Infinity)) {
+                return makeResult(undefined, 'Range exceeded', true);
             }
 
             // Round to 5 decimals. Hides precision errors.
@@ -75,7 +79,7 @@
             return 'Incomplete expression';
         }
 
-        if (errorMessage.startsWith('Unexpected')) {
+        if (errorMessage.startsWith('Unexpected end of input')) {
             return 'Incomplete expression';
         }
 

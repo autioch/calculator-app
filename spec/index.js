@@ -90,13 +90,13 @@ const calculateTestCases = [
         description: 'Division by zero',
         input: '5 / 0',
         result: undefined,
-        errorMessage: 'Sorry, failed to calculate'
+        errorMessage: `Can't divide by zero`
     },
     {
         description: 'Division by zero in complex expression',
         input: '2 * 2 / 0 ** 2',
         result: undefined,
-        errorMessage: 'Sorry, failed to calculate'
+        errorMessage: `Can't divide by zero`
     },
     {
         description: 'Multiply by zero',
@@ -117,6 +117,12 @@ const calculateTestCases = [
         errorMessage: ''
     },
     {
+        description: 'Add alternative decimals',
+        input: '/',
+        result: undefined,
+        errorMessage: 'Incomplete expression'
+    },
+    {
         description: 'Long numbers resulting in Infinity',
         input: `
         111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
@@ -124,38 +130,91 @@ const calculateTestCases = [
         1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
         `,
         result: undefined,
-        errorMessage: 'Sorry, failed to calculate'
+        errorMessage: 'Range exceeded'
     },
+    // exponent totals
     {
-        description: 'Exponent negative base',
+        description: 'Exponent negative total base',
         input: '-2^3',
-        result: undefined,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        result: -8,
+        errorMessage: '',
     },
     {
-        description: 'Exponent negative power',
+        description: 'Exponent negative total power',
         input: '2^-3',
         result: 0.125,
         errorMessage: ''
     },
     {
-        description: 'Exponent both negative',
+        description: 'Exponent both total negative',
         input: '-2^-3',
-        result: undefined,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        result: -0.125,
+        errorMessage: '',
+    },
+    // exponent zeros
+    {
+        description: 'Exponent zeros',
+        input: '0^0',
+        result: 1,
+        errorMessage: ''
     },
     {
-        description: 'Exponent decimals',
+        description: 'Exponent zero power',
+        input: '10^0',
+        result: 1,
+        errorMessage: ''
+    },
+    {
+        description: 'Exponent zero base',
+        input: '0^10',
+        result: 0,
+        errorMessage: ''
+    },
+    // exponent decimals
+    {
+        description: 'Exponent half none',
         input: '2.5^3.5',
         result: 24.70529,
         errorMessage: ''
     },
     {
-        description: 'Exponent negative decimals',
-        input: '-2.5^-3.5',
-        result: undefined,
-        errorMessage: 'Exponentiation of negative base is not supported',
+        description: 'Exponent half power',
+        input: '2.5^0.5',
+        result: 1.58114,
+        errorMessage: ''
     },
+    {
+        description: 'Exponent half base',
+        input: '0.5^3.5',
+        result: 0.08839,
+        errorMessage: ''
+    },
+    {
+        description: 'Exponent half both',
+        input: '0.5^0.5',
+        result: 0.70711,
+        errorMessage: ''
+    },
+    // exponent negative halves
+    {
+        description: 'Exponent negative half power',
+        input: '-0.5^0.5',
+        result: undefined,
+        errorMessage: 'Impossible exponentiation'
+    },
+    {
+        description: 'Exponent negative half base',
+        input: '0.5^-0.5',
+        result: 1.41421,
+        errorMessage: ''
+    },
+    {
+        description: 'Exponent negative half both',
+        input: '-0.5^-0.5',
+        result: undefined,
+        errorMessage: 'Impossible exponentiation'
+    },
+
     // operator precedence
     {
         description: 'Multiply before adding',
