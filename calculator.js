@@ -74,23 +74,33 @@
     // Translate JS errors into human readable form
     // This helps hiding the usage of eval.
     function fixMessage(errorMessage) {
-        // Known issue. Unary requires negative numbers to be enclosed in brackets.
-        if (errorMessage.startsWith('Unary operator')) {
+        if (exponentCauses.some(cause => errorMessage.startsWith(cause))) {
             return 'Exponentiation of negative base is not supported';
         }
 
-        // comment character will be treated as regular expression start
-        if (errorMessage.startsWith('Invalid regular')) {
+        if (incompleteCauses.some(cause => errorMessage.startsWith(cause))) {
             return 'Incomplete expression';
         }
 
-        if (errorMessage.startsWith('Unexpected end of input')) {
-            return 'Incomplete expression';
-        }
-
-        if (errorMessage.length) {
-            return errorMessage;
-        }
+        return errorMessage;
     }
+
+    // Since we're using the eval hack, JS errors should be translated into human readable form.
+    const incompleteCauses = [
+        'Invalid regular', // /
+        'unterminated regular', // / firefox
+        'Unexpected token', // 2+*2 Chrome/Edge
+        'Unexpected end', // 2+ Chrome/Edge
+        'expected expression', // Firefox: 2+*2, 2+
+    ];
+
+    // Example: -2^3
+    // Known issue. Unary requires negative numbers to be enclosed in brackets.
+    // Firefox serves a different message
+    const exponentCauses = [
+        'Unary operator',
+        'unparenthesized unary'
+    ];
+
 })()
 
