@@ -10,7 +10,8 @@
 (() => {
 
     globalThis.calculator = {
-        run
+        run,
+        tokenize
     };
 
     const decimalFactor = Math.pow(10, 5);
@@ -101,6 +102,41 @@
         'Unary operator',
         'unparenthesized unary'
     ];
+
+    /* Lexer */
+    
+    const tokenList = [
+        ['num', /(?:\d*[.,e])?\d+/, parseFloat],
+        ['add', /\+/, (a, b) => a + b],
+        ['sub', /-/, (a, b) => a - b],
+        ['pow', /(?:\^|\*\*)/, (a, b) => Math.pow(a,b)],
+        ['mul', /(?:\*|×)/, (a, b) => a * b],
+        ['div', /(?:\/|÷)/, (a, b) => a / b],
+        ['ws', /\s/], // whitespace
+        ['err', /./], // everything else is invalid
+    ].map(([id, token]) => ([id, token.source]));
+
+    const lexerRegex = new RegExp(tokenList.map(([, token]) => `(${token})`).join('|'), 'gmu');
+
+    function tokenize(text) {
+        const tokens = [];
+        let match;
+
+        lexerRegex.lastIndex = 0;
+
+        while (match = lexerRegex.exec(text)) {
+            const value = match[0]
+            const id = tokenList[match.indexOf(value, 1) - 1][0];
+
+            (id !== 'ws') && tokens.push({
+                value,
+                id,
+                pos: lexerRegex.lastIndex
+            });
+        }
+
+        return tokens;
+    }
 
 })()
 
