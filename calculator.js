@@ -11,7 +11,8 @@
 
     globalThis.calculator = {
         run,
-        tokenize
+        tokenize,
+        toRpn
     };
 
     const decimalFactor = Math.pow(10, 5);
@@ -104,16 +105,16 @@
     ];
 
     /* Lexer */
-    
+
     const tokenList = [
-        ['num', /(?:\d*[.,e])?\d+/, parseFloat],
-        ['add', /\+/, (a, b) => a + b],
-        ['sub', /-/, (a, b) => a - b],
-        ['pow', /(?:\^|\*\*)/, (a, b) => Math.pow(a,b)],
-        ['mul', /(?:\*|×)/, (a, b) => a * b],
-        ['div', /(?:\/|÷)/, (a, b) => a / b],
-        ['ws', /\s/], // whitespace
-        ['err', /./], // everything else is invalid
+        ['num', /(?:\d*[.,e])?\d+/, 0, parseFloat],
+        ['add', /\+/, 1, (a, b) => a + b],
+        ['sub', /-/, 1, (a, b) => a - b],
+        ['pow', /(?:\^|\*\*)/, 3, (a, b) => Math.pow(a, b)],
+        ['mul', /(?:\*|×)/, 2, (a, b) => a * b],
+        ['div', /(?:\/|÷)/, 2, (a, b) => a / b],
+        ['ws', /\s/, -1], // whitespace
+        ['err', /./, -1], // everything else is invalid
     ].map(([id, token]) => ([id, token.source]));
 
     const lexerRegex = new RegExp(tokenList.map(([, token]) => `(${token})`).join('|'), 'gmu');
@@ -137,6 +138,39 @@
 
         return tokens;
     }
+
+    /* RPN */
+
+    const precedence = Object.fromEntries(tokenList.map(([id,, precedence])=> [id, precedence]));
+
+    function toRpn(tokens) {
+        const result = [];
+        const stack = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+
+            if (token.id === 'num') {
+
+                result.push(token);
+
+                continue;
+            }
+
+            while (stack.length > 0) {
+                if (precedence[token.id] > precedence[stack[stack.length - 1].id]) {
+                    break;
+                }
+
+                result.push(stack.pop());
+            }
+
+            stack.push(token);
+        }
+
+        return [...result, ...stack.reverse()];
+    }
+    
 
 })()
 
