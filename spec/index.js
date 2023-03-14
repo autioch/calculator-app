@@ -11,7 +11,7 @@ function describe(describeLabel, tests, itFn) {
         try {
             itFn(testCase);
         } catch (err) {
-            console.assert(false, 'Unexpected error %o', err.message)
+            console.assert(false, 'Unexpected error %o', err.message, { cause: err })
         }
     });
 
@@ -20,7 +20,7 @@ function describe(describeLabel, tests, itFn) {
 
 document.addEventListener('DOMContentLoaded', () => {
     describe('tokenize', calculateTestCases, (testCase) => {
-        const { input, tokens, errorTokenCount =0 } = testCase;
+        const { input, tokens, errorTokenCount = 0 } = testCase;
         const output = calculator.tokenize(input)
         const values = output.map((token) => token.value);
 
@@ -28,13 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.assert(Object.is(tokens.join(','), values.join(',')), 'Expected result %o to equal %o', values, tokens);
     });
 
-    // describe('calculate', calculateTestCases, (testCase) => {
-    //     const { input, result, errorMessage } = testCase;
-    //     const output = calculator.run(input);
+    describe('calculate', calculateTestCases, (testCase) => {
+        const { input, result, errorMessage } = testCase;
+        const output = calculator.calculate(input);
 
-    //     console.assert(Object.is(result, output.result), 'Expected result %o to equal %o', result, output.result);
-    //     console.assert(Object.is(errorMessage, output.message), 'Expected message %o to equal %o', errorMessage, output.message);
-    // });
+        console.assert(Object.is(result, output.result), 'Expected result %o to equal %o', result, output.result);
+        console.assert(Object.is(errorMessage, output.message), 'Expected message %o to equal %o', errorMessage, output.message);
+    });
 });
 
 // easier test scoping
@@ -48,7 +48,7 @@ const calculateTestCases = [
         input: '-3',
         result: -3,
         errorMessage: '',
-        tokens: ['-', '3']
+        tokens: ['-3']
     },
     {
         description: 'Add two positive integers',
@@ -76,7 +76,7 @@ const calculateTestCases = [
         input: '4 / 2',
         result: 2,
         errorMessage: '',
-        tokens: ['4', '/', '2']
+        tokens: ['4', '/', '2'],
     },
     {
         description: 'Exponent two positive integers',
@@ -91,14 +91,14 @@ const calculateTestCases = [
         input: '2e3',
         result: 2000,
         errorMessage: '',
-        tokens: ['2e3']
+        tokens: [2000]
     },
     {
         description: 'Scientific notation operations',
         input: '1e3 + 1e4 - 1e2',
         result: 10900,
         errorMessage: '',
-        tokens: ['1e3', '+', '1e4', '-', '1e2']
+        tokens: [1000, '+', 10000, '-', 100],
     },
     {
         description: 'Division by zero',
@@ -147,14 +147,14 @@ const calculateTestCases = [
         input: '0,1 + 0,2',
         result: 0.3,
         errorMessage: '',
-        tokens: ['0,1', '+', '0,2']
+        tokens: [0.1, '+', 0.2],
     },
     {
-        description: 'Add alternative decimals',
+        description: 'Just divide',
         input: '/',
         result: undefined,
         errorMessage: 'Incomplete expression',
-        tokens: ['/']
+        tokens: ['/'],
     },
     {
         description: 'Long numbers resulting in Infinity',
@@ -166,9 +166,9 @@ const calculateTestCases = [
         result: undefined,
         errorMessage: 'Range exceeded',
         tokens: [
-            '111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+            111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111,
             '*',
-            '1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'
+            1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
         ]
     },
     // exponent totals
@@ -177,21 +177,21 @@ const calculateTestCases = [
         input: '-2^3',
         result: -8,
         errorMessage: '',
-        tokens: ['-', '2', '^', '3']
+        tokens: ['-2', '^', '3']
     },
     {
         description: 'Exponent negative total power',
         input: '2^-3',
         result: 0.125,
         errorMessage: '',
-        tokens: ['2', '^', '-', '3']
+        tokens: ['2', '^', '-3']
     },
     {
         description: 'Exponent both total negative',
         input: '-2^-3',
         result: -0.125,
         errorMessage: '',
-        tokens: ['-', '2', '^', '-', '3']
+        tokens: ['-2', '^', '-3']
     },
     // exponent zeros
     {
@@ -250,21 +250,21 @@ const calculateTestCases = [
         input: '-0.5^0.5',
         result: undefined,
         errorMessage: 'Impossible exponentiation',
-        tokens: ['-', '0.5', '^', '0.5']
+        tokens: ['-0.5', '^', '0.5']
     },
     {
         description: 'Exponent negative half base',
         input: '0.5^-0.5',
         result: 1.41421,
         errorMessage: '',
-        tokens: ['0.5', '^', '-', '0.5']
+        tokens: ['0.5', '^', '-0.5']
     },
     {
         description: 'Exponent negative half both',
         input: '-0.5^-0.5',
         result: undefined,
         errorMessage: 'Impossible exponentiation',
-        tokens: ['-', '0.5', '^', '-', '0.5']
+        tokens: ['-0.5', '^', '-0.5']
     },
 
     // operator precedence

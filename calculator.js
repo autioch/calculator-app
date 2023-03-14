@@ -11,8 +11,8 @@
 
     globalThis.calculator = {
         run,
-        tokenize,
-        toRpn
+        tokenize, // for tests only
+        calculate
     };
 
     const decimalFactor = Math.pow(10, 5);
@@ -109,13 +109,23 @@
     const tokenList = [
         ['num', /(?:\d*[.,e])?\d+/, 0, parseFloat],
         ['add', /\+/, 1, (a, b) => a + b],
-        ['sub', /-/, 1, (a, b) => a - b],
-        ['pow', /(?:\^|\*\*)/, 3, (a, b) => Math.pow(a, b)],
+        ['sub', /-/, 1, (a, b) => b - a],// invert order due to rpn stack poping
+        ['pow', /(?:\^|\*\*)/, 3, (a, b) => {
+            if ((a % 1 !== 0) && (b < 0)) {
+                throw Error('Impossible exponentiation');
+            }
+            return Math.pow(b, a);
+        }], // invert order due to rpn stack poping
         ['mul', /(?:\*|×)/, 2, (a, b) => a * b],
-        ['div', /(?:\/|÷)/, 2, (a, b) => a / b],
+        ['div', /(?:\/|÷)/, 2, (a, b) => {
+            if (a === 0) {
+                throw Error("Can't divide by zero");
+            }
+            return b / a;
+        }],// invert order due to rpn stack poping
         ['ws', /\s/, -1], // whitespace
         ['err', /./, -1], // everything else is invalid
-    ].map(([id, token]) => ([id, token.source]));
+    ].map(([id, token, precedence, fn]) => ([id, token.source, precedence, fn]));
 
     const lexerRegex = new RegExp(tokenList.map(([, token]) => `(${token})`).join('|'), 'gmu');
 
@@ -130,19 +140,39 @@
             const id = tokenList[match.indexOf(value, 1) - 1][0];
 
             (id !== 'ws') && tokens.push({
-                value,
+                value: id === 'num' ? parseFloat(value.replace(',', '.')) : value,
                 id,
                 pos: lexerRegex.lastIndex
             });
         }
 
-        return tokens;
+        // Hack fix for negative numbers
+        const withNegative = [];
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+            if (token.id === 'sub') {
+                if (i === 0 || (tokens[i - 1].id !== 'num')) {
+                    const nextToken = tokens[i + 1];
+
+                    if (nextToken?.id === 'num') {
+                        withNegative.push({ id: 'num', pos: token.pos, value: -nextToken.value });
+                        i++;
+                        continue;
+                    }
+                }
+            }
+            withNegative.push(token);
+        }
+
+        return withNegative;
     }
 
     /* RPN */
 
-    const precedence = Object.fromEntries(tokenList.map(([id,, precedence])=> [id, precedence]));
+    const precedence = Object.fromEntries(tokenList.map(([id, , precedence]) => [id, precedence]));
 
+
+    // This could immediately calculate.
     function toRpn(tokens) {
         const result = [];
         const stack = [];
@@ -170,7 +200,63 @@
 
         return [...result, ...stack.reverse()];
     }
-    
+
+    /* calculate RPN */
+
+    const calculateFns = Object.fromEntries(tokenList.map(([id, , , fn]) => [id, fn]));
+
+    function calculateRpn(tokens) {
+        const stack = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+            let token = tokens[i];
+            if (token.id !== 'num') {
+                if (stack.length < 2){
+                    throw Error('Incomplete expression')
+                }
+                token = { id: 'num', value: calculateFns[token.id](stack.pop().value, stack.pop().value) };
+            }
+            stack.push(token);
+        }
+
+        if (stack.length > 1) {
+            throw Error('Invalid expression');
+        }
+
+        return stack[0].value;
+    }
+
+    function calculate(text) {
+
+        try {
+            const tokens = tokenize(text);
+
+            if (tokens.some(token => token.id === 'err')) {
+                return makeResult(undefined, 'Remove invalid characters');
+            }
+            const rpn = toRpn(tokens);
+            const result = calculateRpn(rpn);
+
+            // No error, but somehow we got weird value
+            if (Object.is(result, NaN)) {
+                return makeResult(undefined, 'Sorry, failed to calculate', true);
+            }
+
+            if (Object.is(result, Infinity) || Object.is(result, -Infinity)) {
+                return makeResult(undefined, 'Range exceeded', true);
+            }
+
+
+            // Round to 5 decimals. Hides precision errors.
+            const rounded = Math.round(result * decimalFactor) / decimalFactor;
+
+            return makeResult(rounded, '');
+        } catch (err) {
+            return makeResult(undefined, fixMessage(err.message));
+        }
+
+    }
+
 
 })()
 
