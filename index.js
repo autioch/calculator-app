@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function setup() {
 
     function tryCalculate() {
         // calculator.run is from the calculator.js file.
-        const { hasError, hasResult, result, message } = calculator.run(ui.input.value);
+        const { hasError, hasResult, result, message } = calculator.calculate(ui.input.value);
 
         ui.output.textContent = ui.output.title = hasResult ? `Result: ${result}` : message;
         ui.output.classList.toggle('has-error', hasError);
