@@ -43,7 +43,7 @@
         ['err', /./, -1], // everything else is invalid
     ].map(([id, token, precedence, fn]) => ({ id, token: token.source, precedence, fn }));
 
-
+    const tokenDict = Object.fromEntries(tokenList.map(token => [token.id, token]));
     const lexerRegex = new RegExp(tokenList.map(({ token }) => `(${token})`).join('|'), 'gmu');
 
     function tokenize(text) {
@@ -86,9 +86,6 @@
 
     /* RPN */
 
-    const precedence = Object.fromEntries(tokenList.map(({ id, precedence }) => [id, precedence]));
-
-
     // This could immediately calculate.
     function toRpn(tokens) {
         const result = [];
@@ -105,7 +102,7 @@
             }
 
             while (stack.length > 0) {
-                if (precedence[token.id] > precedence[stack[stack.length - 1].id]) {
+                if (tokenDict[token.id].precedence > tokenDict[stack[stack.length - 1].id].precedence) {
                     break;
                 }
 
@@ -120,8 +117,6 @@
 
     /* calculate RPN */
 
-    const calculateFns = Object.fromEntries(tokenList.map(({ id, fn }) => [id, fn]));
-
     function calculateRpn(tokens) {
         const stack = [];
 
@@ -131,7 +126,7 @@
                 if (stack.length < 2) {
                     throw Error('Incomplete expression')
                 }
-                token = { id: 'num', value: calculateFns[token.id](stack.pop().value, stack.pop().value) };
+                token = { id: 'num', value: tokenDict[token.id].fn(stack.pop().value, stack.pop().value) };
             }
             stack.push(token);
         }
@@ -174,5 +169,4 @@
 
     }
 
-})()
-
+})();
