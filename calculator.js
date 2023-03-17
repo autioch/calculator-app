@@ -20,12 +20,14 @@
         };
     }
 
-    /* Lexer */
+    const NUM = 'num';
+    const SUB = 'sub';
+    const WS = 'ws';
 
     const tokenList = [
-        ['num', /(?:\d*[.,e])?\d+/, 0, parseFloat],
+        [NUM, /(?:\d*[.,e])?\d+/, 0, parseFloat],
         ['add', /\+/, 1, (a, b) => a + b],
-        ['sub', /-/, 1, (a, b) => a - b],
+        [SUB, /-/, 1, (a, b) => a - b],
         ['pow', /(?:\^|\*\*)/, 3, (a, b) => {
             if ((b % 1 !== 0) && (a < 0)) {
                 throw Error('Impossible exponentiation');
@@ -39,7 +41,7 @@
             }
             return a / b;
         }],
-        ['ws', /\s/, -1], // whitespace
+        [WS, /\s/, -1], // whitespace
         ['err', /./, -1], // everything else is invalid
     ].map(([id, token, precedence, fn]) => ({ id, token: token.source, precedence, fn }));
 
@@ -56,8 +58,8 @@
             const value = match[0];
             const { id } = tokenList[match.indexOf(value, 1) - 1];
 
-            (id !== 'ws') && tokens.push({
-                value: id === 'num' ? parseFloat(value.replace(',', '.')) : value,
+            (id !== WS) && tokens.push({
+                value: id === NUM ? parseFloat(value.replace(',', '.')) : value,
                 id,
                 pos: lexerRegex.lastIndex
             });
@@ -67,12 +69,12 @@
         const withNegative = [];
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
-            if (token.id === 'sub') {
-                if (i === 0 || (tokens[i - 1].id !== 'num')) {
+            if (token.id === SUB) {
+                if (i === 0 || (tokens[i - 1].id !== NUM)) {
                     const nextToken = tokens[i + 1];
 
-                    if (nextToken?.id === 'num') {
-                        withNegative.push({ id: 'num', pos: token.pos, value: -nextToken.value });
+                    if (nextToken?.id === NUM) {
+                        withNegative.push({ id: NUM, pos: token.pos, value: -nextToken.value });
                         i++;
                         continue;
                     }
@@ -84,9 +86,6 @@
         return withNegative;
     }
 
-    /* RPN */
-
-    // This could immediately calculate.
     function toRpn(tokens) {
         const result = [];
         const stack = [];
@@ -94,7 +93,7 @@
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
 
-            if (token.id === 'num') {
+            if (token.id === NUM) {
 
                 result.push(token);
 
@@ -102,7 +101,7 @@
             }
 
             while (stack.length > 0) {
-                if (tokenDict[token.id].precedence > tokenDict[stack[stack.length - 1].id].precedence) {
+                if (tokenDict[token.id].precedence > tokenDict[stack.at(-1).id].precedence) {
                     break;
                 }
 
@@ -115,8 +114,6 @@
         return [...result, ...stack.reverse()];
     }
 
-    /* calculate RPN */
-
     function calculateRpn(tokens) {
         const stack = [];
 
@@ -124,13 +121,13 @@
             let token = tokens[i];
             let toStack = token.value;
 
-            if (token.id !== 'num') {
+            if (token.id !== NUM) {
                 const { fn } = tokenDict[token.id];
                 if (stack.length < fn.length) {
                     throw Error('Incomplete expression')
                 }
                 toStack = fn(...stack.splice(-fn.length, fn.length));
-            } 
+            }
 
             stack.push(toStack);
         }
@@ -143,7 +140,6 @@
     }
 
     function calculate(text) {
-
         try {
             const tokens = tokenize(text);
 
@@ -169,7 +165,6 @@
         } catch (err) {
             return makeResult(undefined, err.message);
         }
-
     }
 
 })();
